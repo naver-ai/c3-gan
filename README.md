@@ -174,7 +174,7 @@ This code was developed from the released source code of [FineGAN: Unsupervised 
 
 ### License
 ```
-Copyright 2021-present NAVER Corp.
+Copyright 2022-present NAVER Corp.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
