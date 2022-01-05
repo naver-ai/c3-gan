@@ -6,6 +6,7 @@
 </p>
 
 > #### Contrastive Fine-grained Class Clustering via Generative Adversarial Networks [[Paper](https://arxiv.org/abs/2112.14971)]<br>
+> #### Authors: [Yunji Kim](https://github.com/YunjiKim), [Jung-Woo Ha](https://github.com/jungwoo-ha) 
 
 #### Abstract
 Unsupervised fine-grained class clustering is practical yet challenging task due to the difficulty of feature representations learning of subtle object details.
