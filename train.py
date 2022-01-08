@@ -45,22 +45,17 @@ class Trainer(object):
         self.test_dataloader = torch.utils.data.DataLoader(self.test_dataset, batch_size=self.bs, drop_last=False, num_workers=8, shuffle=False)
 
         ## define models to train
+        print('Generate model.')
         self.netG, self.netD = load_network(self.num_cls)   
         self.optimizerG, self.optimizerD = define_optimizers(self.netG, self.netD)
-        print('Generated model.')
-
-        if cfg.MODEL_PATH != '':
-            self.resume(cfg.MODEL_PATH)
-            print('Loaded pre-trained model.')
-
-        ## define loss functions
-        self.BCE = nn.BCELoss()
         self.CE = nn.CrossEntropyLoss()
-        self.L1 = nn.L1Loss()
-        self.L2 = nn.MSELoss()
         self.eye = torch.eye(self.num_cls).cuda()
 
-        ## get the statistic of training images (for fid score)
+        if cfg.MODEL_PATH != '':
+            print('Load pre-trained model.')
+            self.resume(cfg.MODEL_PATH)
+
+        print('Get the statistic of training images for computing fid score.')
         self.inception = InceptionV3([3]).cuda()
         self.inception.eval()
         pred_arr = np.empty((len(self.dataset), 2048))
@@ -90,14 +85,14 @@ class Trainer(object):
 
  
     def prepare_code(self):
-        free_z = torch.FloatTensor(self.bs, cfg.GAN.Z_DIM).normal_(0, 1).cuda()
-        free_cz = torch.FloatTensor(self.bs, cfg.GAN.CZ_DIM).normal_(0, 1).cuda()
-        free_c = torch.zeros(self.bs, self.num_cls).cuda()
+        rand_z = torch.FloatTensor(self.bs, cfg.GAN.Z_DIM).normal_(0, 1).cuda()
+        rand_cz = torch.FloatTensor(self.bs, cfg.GAN.CZ_DIM).normal_(0, 1).cuda()
+        rand_c = torch.zeros(self.bs, self.num_cls).cuda()
         rand_idx = [i for i in range(self.num_cls)]
         random.shuffle(rand_idx)
         for i, idx in enumerate(rand_idx[:self.bs]):
-            free_c[i, idx] = 1
-        return free_z, free_cz, free_c
+            rand_c[i, idx] = 1
+        return rand_z, rand_cz, rand_c
     
 
     def prepare_data(self, data):
@@ -138,9 +133,9 @@ class Trainer(object):
         c = F.normalize(class_emb, p=2, dim=1)
 
         class_dist = torch.cat([torch.matmul(f, c[i]).unsqueeze(-1)/self.temp for i in range(self.num_cls)], 1)
-        info_loss = self.CE(class_dist, torch.argmax(self.real_c, 1))
+        info_loss = 5*self.CE(class_dist, torch.argmax(self.rand_c, 1))
         class_dist_aug = torch.cat([torch.matmul(ff, c[i]).unsqueeze(-1)/self.temp for i in range(self.num_cls)], 1)
-        info_loss_aug = self.CE(class_dist_aug, torch.argmax(self.real_c, 1))
+        info_loss_aug = self.CE(class_dist_aug, torch.argmax(self.rand_c, 1))
 
         ## real image contrastive loss
         labels = torch.cat([torch.arange(self.bs) for i in range(2)], dim=0)
@@ -204,9 +199,9 @@ class Trainer(object):
         c = F.normalize(class_emb, p=2, dim=1)
 
         class_dist = torch.cat([torch.matmul(f, c[i]).unsqueeze(-1)/self.temp for i in range(self.num_cls)], 1)
-        info_loss = 5*self.CE(class_dist, torch.argmax(self.real_c, 1))
+        info_loss = 5*self.CE(class_dist, torch.argmax(self.rand_c, 1))
         class_dist_aug = torch.cat([torch.matmul(ff, c[i]).unsqueeze(-1)/self.temp for i in range(self.num_cls)], 1)
-        info_loss_aug = self.CE(class_dist_aug, torch.argmax(self.real_c, 1))
+        info_loss_aug = self.CE(class_dist_aug, torch.argmax(self.rand_c, 1))
 
         ## mask regularizations
         mean_map = torch.mean(self.fg_mask.view(self.bs, -1), 1)
@@ -239,13 +234,15 @@ class Trainer(object):
 
             for data in self.dataloader: 
             
+                ## update D
                 self.real_img, self.aug_img = self.prepare_data(data)
-                self.real_z, self.real_cz, self.real_c = self.prepare_code()
-                _, self.fg_mask, self.fg_img, self.fake_img = self.netG(self.real_z, self.real_cz, self.real_c, self.random_grid(self.real_img.size()))
+                rand_z, rand_cz, self.rand_c = self.prepare_code()
+                _, self.fg_mask, self.fg_img, self.fake_img = self.netG(rand_z, rand_cz, self.rand_c, self.random_grid(self.real_img.size()))
                 self.train_D()
 
-                self.real_z, self.real_cz, self.real_c = self.prepare_code()
-                _, self.fg_mask, self.fg_img, self.fake_img = self.netG(self.real_z, self.real_cz, self.real_c, self.random_grid(self.real_img.size()))
+                ## update G
+                rand_z, rand_cz, self.rand_c = self.prepare_code()
+                _, self.fg_mask, self.fg_img, self.fake_img = self.netG(rand_z, rand_cz, self.rand_c, self.random_grid(self.real_img.size()))
                 self.train_G()
 
                 self.steps += 1
