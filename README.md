@@ -164,7 +164,7 @@ For loading the parameters of the pre-trained model, please adjust the value of 
   title={Contrastive Fine-grained Class Clustering via Generative Adversarial Networks},
   author={Kim, Yunji and Ha, Jung-Woo},
   year={2021},
-  booktitle = {arXiv}
+  booktitle = {ICLR}
 }
 ```
 
