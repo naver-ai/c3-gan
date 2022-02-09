@@ -1,4 +1,4 @@
-### Official pytorch implemenation of C3-GAN
+### Official pytorch implemenation of C3-GAN (ICLR 2022)
 ---
 
 <p align="center">
