@@ -1,4 +1,4 @@
-### Official pytorch implemenation of C3-GAN (ICLR 2022)
+### Official pytorch implementation of C3-GAN (ICLR 2022)
 ---
 
 <p align="center">
@@ -9,13 +9,12 @@
 > #### Authors: [Yunji Kim](https://github.com/YunjiKim), [Jung-Woo Ha](https://github.com/jungwoo-ha) 
 
 #### Abstract
-Unsupervised fine-grained class clustering is practical yet challenging task due to the difficulty of feature representations learning of subtle object details.
-We introduce C3-GAN, a method that leverages the categorical inference power of InfoGAN by applying contrastive learning. We aim to learn feature representations that encourage the data to form distinct cluster boundaries in the embedding space, while also maximizing the mutual information between the latent code and its observation. Our approach is to train the discriminator, which is used for inferring clusters, to optimize the contrastive loss, where the image-latent pairs that maximize the mutual information are considered as positive pairs and the rest as negative pairs. Specifically, we map the input of the generator, which was sampled from the categorical distribution, to the embedding space of the discriminator and let them act as a cluster centroid. In this way, C3-GAN achieved to learn a clustering-friendly embedding space where each cluster is distinctively separable. Experimental results show that C3-GAN achieved state-of-the-art clustering performance on four fine-grained benchmark datasets, while also alleviating the mode collapse phenomenon.
+Unsupervised fine-grained class clustering is a practical yet challenging task due to the difficulty of feature representations learning of subtle object details. We introduce C3-GAN, a method that leverages the categorical inference power of InfoGAN with contrastive learning. We aim to learn feature representations that encourage a dataset to form distinct cluster boundaries in the embedding space, while also maximizing the mutual information between the latent code and its image observation. Our approach is to train a discriminator, which is also used for inferring clusters, to optimize the contrastive loss, where image-latent pairs that maximize the mutual information are considered as positive pairs and the rest as negative pairs. Specifically, we map the input of a generator, which was sampled from the categorical distribution, to the embedding space of the discriminator and let them act as a cluster centroid. In this way, C3-GAN succeeded in learning a clustering-friendly embedding space where each cluster is distinctively separable. Experimental results show that C3-GAN achieved the state-of-the-art clustering performance on four fine-grained image datasets, while also alleviating the mode collapse phenomenon.
 
 
 
 ----
-### I. To do list before you run the code
+### I. Things to do before running the code
 
 The initial code is optimized for [CUB](http://www.vision.caltech.edu/visipedia/CUB-200-2011.html) dataset. :owl: :parrot: :swan: :eagle: :duck:
 You may have to adjust few things for running this code on another datasets. Please refer to descriptions below.
@@ -31,7 +30,7 @@ You may also have to adjust [datasets.py](https://github.com/naver-ai/c3-gan/blo
 
 ----
 ### II. Train
-If you have set every arguments in [config.py](https://github.com/naver-ai/c3-gan/blob/main/config.py) file, the training code would be run with the simple command below.
+If you have set every arguments in [config.py](https://github.com/naver-ai/c3-gan/blob/main/config.py) file, the training code will be running with the simple command below.
 ```
 python train.py
 ```
@@ -145,13 +144,13 @@ For loading the parameters of the pre-trained model, please adjust the value of 
 #### ※  Image Generation Results
 
 >##### Conditional Generation 
-><sup>*Images synthesized with the predicted cluster indices of given real images.*</sup>
+><sup>*Images synthesized with the cluster indices of real images that were predicted by the discriminator.*</sup>
 <p align="center">
   <img src="figures/conditional_generation.png" width="80%" title="conditional_generation"></img>
 </p>
 
 >##### Random Generation
-><sup>*Images synthesized by random value sampling of the latent code c and noise variable z.*</sup>
+><sup>*Images synthesized by controlling values of the latent code c and the random noise z.*</sup>
 <p align="center">
   <img src="figures/random_generation.png" width="80%" title="random_generation"></img>
 </p>
@@ -160,7 +159,7 @@ For loading the parameters of the pre-trained model, please adjust the value of 
 
 #### ※※ bibtex
 ```
-@article{kim2021c3gan,
+@article{kim2022c3gan,
   title={Contrastive Fine-grained Class Clustering via Generative Adversarial Networks},
   author={Kim, Yunji and Ha, Jung-Woo},
   year={2022},
@@ -172,6 +171,8 @@ For loading the parameters of the pre-trained model, please adjust the value of 
 
 #### ※※ Acknowledgement
 This code was developed from the released source code of [FineGAN: Unsupervised Hierarchical Disentanglement for Fine-grained Object Generation and Discovery](https://github.com/kkanshul/finegan).
+
+---
 
 ### License
 ```
