@@ -30,13 +30,23 @@ You may also have to adjust [datasets.py](https://github.com/naver-ai/c3-gan/blo
 
 ----
 ### II. Train
-If you have set every arguments in [config.py](https://github.com/naver-ai/c3-gan/blob/main/config.py) file, the training code will be running with the simple command below.
+If you have set every arguments in [config.py](https://github.com/naver-ai/c3-gan/blob/main/config.py) file, training will be started with the simple command below.
 ```
 python train.py
 ```
 
-#### ※ Pre-trained model for [CUB](https://drive.google.com/file/d/1vNL0SqOfI0D8qG0K23SJdYs2aK11ugMO/view?usp=sharing)
-For loading the parameters of the pre-trained model, please adjust the value of cfg.OVER to '2' and set cfg.MODEL_PATH to wherever you saved the file.
+#### ※ Trained models
+For loading parameters of the trained models, please adjust the value of cfg.NUM_GT_CLASSES & cfg.OVER following the table below and set cfg.MODEL_PATH to wherever you saved the file.
+
+><sup>*Depending on the initial weights, there are variations in terms of clustering quality and sampling quality in the trained models. Since we chose to share ones that have better sampling quality, the scores may not align with the numbers in the paper.*</sup>
+
+| Dataset   |  cfg.NUM_GT_CLASSES  | cfg.OVER  | parameters |
+|:-------:|:--------:|:--------:|:--------:|
+| CUB | 200 | 2 | [link](https://drive.google.com/file/d/1vNL0SqOfI0D8qG0K23SJdYs2aK11ugMO/view?usp=sharing) |
+| Stanford Cars | 196 | 3 | [link](https://drive.google.com/file/d/1w_Y3YT7dEYusuyI8HKOg39ZfPPj7V_VJ/view?usp=sharing) |
+| Stanford Dogs | 120 | 3 | [link](https://drive.google.com/file/d/1tHCSIwO1zTXwbiLmG41qxgyZFtmhDDAl/view?usp=sharing) |
+| Oxford Flower | 102 | 3 | [link](https://drive.google.com/file/d/1mZxGueBH2o2CZQbFwWmnw_O2KTmSlD78/view?usp=sharing) |
+
 
 ---
 ### III. Results
