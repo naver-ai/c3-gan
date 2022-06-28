@@ -38,7 +38,7 @@ python train.py
 #### ※ Trained models
 For loading parameters of the trained models, please adjust the value of cfg.NUM_GT_CLASSES & cfg.OVER following the table below and set cfg.MODEL_PATH to wherever you saved the file.
 
-><sup>*Depending on the initial weights, there are variations in terms of clustering quality and sampling quality in the trained models. Since we chose to share ones that have better sampling quality, the scores may not align with the numbers in the paper.*</sup>
+><sup>*Depending on the initial weights, there are variations in terms of clustering quality and sampling quality in the trained models. Since we chose to share ones that have better sampling quality, the scores may not align with the numbers in the paper. (diff ~ 1 point)*</sup>
 
 | Dataset   |  cfg.NUM_GT_CLASSES  | cfg.OVER  | parameters |
 |:-------:|:--------:|:--------:|:--------:|
